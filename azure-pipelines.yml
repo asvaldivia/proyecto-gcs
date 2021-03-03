@@ -7,14 +7,31 @@ trigger:
 - master
 
 pool:
-  vmImage: ubuntu-latest
-
-container: centos:7
+  vmImage: ubuntu-18.04
 
 steps:
-- script: echo Compilar y correr las pruebas unitarias
-  displayName: 'Commit Check'
+- script: sudo apt-get update -y
+  displayName: 'Actualizar Repositorio'
 
-- script: |
-    echo Correr las pruebas de integración
-  displayName: 'Integration Tests'
+- script: sudo apt-get install default-jre -y
+  displayName: 'Instalar Java'
+
+- script: sudo apt-get install openssh-server -y
+  displayName: 'Instalar openssh'
+
+#- script: sbt test
+#  displayName: 'Correr Pruebas Unitarias'
+
+- script: sbt rpm:packageBin
+  displayName: 'Empaquetar Aplicacion'
+
+- task: DownloadSecureFile@1
+  name: AppServerKey
+  displayName: "Descargar Llave Privada de Servidor de Aplicaciones"
+  inputs:
+   secureFile: "webserver-01_key.pem"
+   
+#- script: echo $(AppServerKey.secureFilePath)
+
+- script: sudo chmod 600 $(AppServerKey.secureFilePath) && sudo scp -i $(AppServerKey.secureFilePath) /home/vsts/work/1/s/gcs-app/target/rpm/RPMS/noarch/gcs-app-2.8.x-1.noarch.rpm azureuser@104.214.61.66:/home/azureuser/
+  displayName: 'Importar RPM a VM Azure'
