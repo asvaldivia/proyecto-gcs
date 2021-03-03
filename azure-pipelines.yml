@@ -22,16 +22,20 @@ steps:
 #- script: sbt test
 #  displayName: 'Correr Pruebas Unitarias'
 
-- script: sbt rpm:packageBin
-  displayName: 'Empaquetar Aplicacion'
-
 - task: DownloadSecureFile@1
   name: AppServerKey
   displayName: "Descargar Llave Privada de Servidor de Aplicaciones"
   inputs:
    secureFile: "webserver-01_key.pem"
+
+- script: sudo ssh -i $(AppServerKey.secureFilePath) azureuser@104.214.61.66
+  displayName: 'prueba de conexion ssh a webserver'
+
+- script: sbt rpm:packageBin
+  displayName: 'Empaquetar Aplicacion'
+
    
 #- script: echo $(AppServerKey.secureFilePath)
 
-- script: sudo chmod 600 $(AppServerKey.secureFilePath) && sudo scp -i $(AppServerKey.secureFilePath) /home/vsts/work/1/s/gcs-app/target/rpm/RPMS/noarch/gcs-app-2.8.x-1.noarch.rpm azureuser@104.214.61.66:/home/azureuser/
-  displayName: 'Importar RPM a VM Azure'
+#- script: sudo chmod 600 $(AppServerKey.secureFilePath) && sudo scp -i $(AppServerKey.secureFilePath) /home/vsts/work/1/s/gcs-app/target/rpm/RPMS/noarch/gcs-app-2.8.x-1.noarch.rpm azureuser@104.214.61.66:/home/azureuser/
+#  displayName: 'Importar RPM a VM Azure'
