@@ -26,7 +26,7 @@ steps:
   name: AppServerKey
   displayName: "Descargar Llave Privada de Servidor de Aplicaciones"
   inputs:
-   secureFile: "webserver-01_key.ppk"
+   secureFile: "webserver-01_key.pem"
 
 - script: sbt rpm:packageBin
   displayName: 'Empaquetar Aplicacion'
