@@ -26,7 +26,7 @@ steps:
   name: AppServerKey
   displayName: "Descargar Llave Privada de Servidor de Aplicaciones"
   inputs:
-   secureFile: "webserver-01_key.pem"
+   secureFile: "webserver-01_key.ppk"
 
 - script: sudo ssh -i $(AppServerKey.secureFilePath) azureuser@104.214.61.66
   displayName: 'prueba de conexion ssh a webserver'
