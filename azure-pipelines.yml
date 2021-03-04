@@ -28,7 +28,7 @@ steps:
   inputs:
    secureFile: "webserver-01_key.ppk"
 
-- script: sudo ssh -i $(AppServerKey.secureFilePath) azureuser@104.214.61.66
+- script: sudo chmod 400 $(AppServerKey.secureFilePath) && sudo ssh -i $(AppServerKey.secureFilePath) azureuser@104.214.61.66
   displayName: 'prueba de conexion ssh a webserver'
 
 - script: sbt rpm:packageBin
